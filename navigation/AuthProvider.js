@@ -27,6 +27,7 @@ export const AuthProvider = ({ children }) => {
         register: async (email, password) => {
           try {
             await auth().createUserWithEmailAndPassword(email, password);
+
           } catch (e) {
             console.log(e);
             alert(e.toString().split("] ")[1]);
@@ -39,6 +40,7 @@ export const AuthProvider = ({ children }) => {
             console.error(e);
             alert(e.toString().split("] ")[1]);
           }
+
         },
       }}
     >

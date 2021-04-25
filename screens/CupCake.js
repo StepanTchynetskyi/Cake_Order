@@ -1,4 +1,4 @@
-import React, { UseState } from "react";
+import React, { useState } from "react";
 import {
   StyleSheet,
   Text,
@@ -7,9 +7,10 @@ import {
   Image,
   TouchableOpacity,
 } from "react-native";
-
+import firestore from '@react-native-firebase/firestore';
 const ChooseOne = ({ navigation }) => {
   const arrowBack = "<";
+  const [items,setItems] = useState([])
   return (
     <View style={styles.container}>
       {/* <TouchableOpacity
@@ -97,7 +98,17 @@ const ChooseOne = ({ navigation }) => {
           </TouchableOpacity>
           <TouchableOpacity
             style={[styles.logbtn, { marginLeft: 15 }]}
-            onPress={() => navigation.navigate("ResultPage")}
+            onPress={() => {const users = firestore()
+                              .collection('CupCake').where('page','==',"base").get().then((querySnapshot) => {
+                                                                                                     querySnapshot.forEach((doc) => {
+                                                                                                         // doc.data() is never undefined for query doc snapshots
+                                                                                                         setItems(oldItems =>[...oldItems, doc.data()]);
+
+                                                                                                         console.log(doc.id, " => ", doc.data());
+                                                                                                     })});console.log(items[0].URL);
+
+
+            navigation.navigate("ResultPage");}}
           >
             <Text style={styles.textBtn}>Next</Text>
           </TouchableOpacity>
