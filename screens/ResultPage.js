@@ -67,7 +67,7 @@ const ResultPage = ({route, navigation}) => {
             color: '#BDBDBD',
             textDecorationLine: 'underline',
           }}>
-          Priceaa: {price}
+          Price: {price}
         </Text>
         <TouchableOpacity
           onPress={() => {
@@ -91,7 +91,7 @@ const ResultPage = ({route, navigation}) => {
             </Text>
           </View>
         </TouchableOpacity>
-        <Text style={{fontSize: 20, marginLeft: 20, color: '#BDBDBD'}}>
+        <Text style={{fontSize: 22, marginLeft: 20, color: '#BDBDBD'}}>
           {multiple}
         </Text>
         <TouchableOpacity
@@ -123,7 +123,14 @@ const ResultPage = ({route, navigation}) => {
       <View style={{alignItems: 'center', justifyContent: 'center'}}>
         <TouchableOpacity
           style={styles.logbtn}
-          onPress={() => navigation.navigate('Order')}>
+          onPress={() =>
+            navigation.navigate('Order', {
+              typeName: type.name,
+              price: price,
+              count: multiple,
+              items: items,
+            })
+          }>
           <Text style={{color: '#fff', fontSize: 20}}>Confirm</Text>
         </TouchableOpacity>
       </View>

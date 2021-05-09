@@ -20,7 +20,16 @@ const ChooseOne = ({navigation}) => {
   const [mainItem, setMainItem] = useState(0);
   const [leftItem, setLeftItem] = useState(1);
   const [rightItem, setRightItem] = useState(2);
+  const [heads, setHeads] = useState([
+    'base',
+    'filling',
+    'ads',
+    'cream',
+    'decoration',
+  ]);
   const [flag, setFlag] = useState(false);
+  const [firstPage, setFirstPage] = useState();
+  const [backFlag, setBackFlag] = useState(false);
   const config = {
     velocityThreshold: 0.3,
     directionalOffsetThreshold: 80,
@@ -50,13 +59,199 @@ const ChooseOne = ({navigation}) => {
   }, [pageItems]);
   useEffect(async () => {
     setPageItems([]);
-
     items.forEach(item => {
       if (item.page == page) {
         setPageItems(oldItems => [...oldItems, item]);
       }
       setFlag(true);
     });
+    if (page === 1) {
+      setBackFlag(true);
+      styles.backdisabled = {
+        backgroundColor: '#c5c5c5',
+      };
+      styles.firstPage = {
+        backgroundColor: '#000',
+      };
+      styles.firstPageText = {
+        color: '#fff',
+        fontSize: 20,
+      };
+      styles.secondPage = {
+        color: '#fff',
+      };
+      styles.secondPageText = {
+        fontSize: 20,
+        color: '#000',
+      };
+      styles.thirdPage = {
+        color: '#fff',
+      };
+      styles.thirdPageText = {
+        fontSize: 20,
+        color: '#000',
+      };
+      styles.fourthPage = {
+        color: '#fff',
+      };
+      styles.fourthPageText = {
+        fontSize: 20,
+        color: '#000',
+      };
+      styles.fifthPage = {
+        color: '#fff',
+      };
+      styles.fifthPageText = {
+        fontSize: 20,
+        color: '#000',
+      };
+    } else if (page === 2) {
+      setBackFlag(false);
+      styles.backdisabled = {};
+      styles.firstPage = {
+        backgroundColor: '#fff',
+      };
+      styles.firstPageText = {
+        color: '#000',
+        fontSize: 20,
+      };
+      styles.secondPage = {
+        backgroundColor: '#000',
+      };
+      styles.secondPageText = {
+        fontSize: 20,
+        color: '#fff',
+      };
+      styles.thirdPage = {
+        backgroundColor: '#fff',
+      };
+      styles.thirdPageText = {
+        fontSize: 20,
+        color: '#000',
+      };
+      styles.fourthPage = {
+        backgroundColor: '#fff',
+      };
+      styles.fourthPageText = {
+        fontSize: 20,
+        color: '#000',
+      };
+      styles.fifthPage = {
+        backgroundColor: '#fff',
+      };
+      styles.fifthPageText = {
+        fontSize: 20,
+        color: '#000',
+      };
+    } else if (page === 3) {
+      styles.firstPage = {
+        backgroundColor: '#fff',
+      };
+      styles.firstPageText = {
+        color: '#000',
+        fontSize: 20,
+      };
+      styles.secondPage = {
+        backgroundColor: '#fff',
+      };
+      styles.secondPageText = {
+        fontSize: 20,
+        color: '#000',
+      };
+      styles.thirdPage = {
+        backgroundColor: '#000',
+      };
+      styles.thirdPageText = {
+        fontSize: 20,
+        color: '#fff',
+      };
+      styles.fourthPage = {
+        backgroundColor: '#fff',
+      };
+      styles.fourthPageText = {
+        fontSize: 20,
+        color: '#000',
+      };
+      styles.fifthPage = {
+        backgroundColor: '#fff',
+      };
+      styles.fifthPageText = {
+        fontSize: 20,
+        color: '#000',
+      };
+    } else if (page === 4) {
+      styles.firstPage = {
+        backgroundColor: '#fff',
+      };
+      styles.firstPageText = {
+        color: '#000',
+        fontSize: 20,
+      };
+      styles.secondPage = {
+        backgroundColor: '#fff',
+      };
+      styles.secondPageText = {
+        fontSize: 20,
+        color: '#000',
+      };
+      styles.thirdPage = {
+        backgroundColor: '#fff',
+      };
+      styles.thirdPageText = {
+        fontSize: 20,
+        color: '#000',
+      };
+      styles.fourthPage = {
+        backgroundColor: '#000',
+      };
+      styles.fourthPageText = {
+        fontSize: 20,
+        color: '#fff',
+      };
+      styles.fifthPage = {
+        backgroundColor: '#fff',
+      };
+      styles.fifthPageText = {
+        fontSize: 20,
+        color: '#000',
+      };
+    } else if (page === 5) {
+      styles.firstPage = {
+        backgroundColor: '#fff',
+      };
+      styles.firstPageText = {
+        color: '#000',
+        fontSize: 20,
+      };
+      styles.secondPage = {
+        backgroundColor: '#fff',
+      };
+      styles.secondPageText = {
+        fontSize: 20,
+        color: '#000',
+      };
+      styles.thirdPage = {
+        backgroundColor: '#fff',
+      };
+      styles.thirdPageText = {
+        fontSize: 20,
+        color: '#000',
+      };
+      styles.fourthPage = {
+        backgroundColor: '#fff',
+      };
+      styles.fourthPageText = {
+        fontSize: 20,
+        color: '#000',
+      };
+      styles.fifthPage = {
+        backgroundColor: '#000',
+      };
+      styles.fifthPageText = {
+        fontSize: 20,
+        color: '#fff',
+      };
+    }
   }, [page]);
   function onSwipeLeft(gestureState) {
     if (mainItem == pageItems.length - 1) {
@@ -99,7 +294,7 @@ const ChooseOne = ({navigation}) => {
       {flag ? (
         <View style={styles.mainContainer}>
           {console.log(pageItems)}
-          <Text style={styles.mainLabel}>Choose cupcake base</Text>
+          <Text style={styles.mainLabel}>Choose cupcake {heads[page - 1]}</Text>
           <View style={{height: '40%', width: '100%'}}>
             <GestureRecognizer
               onSwipeLeft={state => onSwipeLeft(state)}
@@ -153,11 +348,15 @@ const ChooseOne = ({navigation}) => {
               marginTop: 9,
             }}>
             <TouchableOpacity
-              disabled={true}
-              style={[
-                styles.logbtn,
-                {marginRight: 15, backgroundColor: '#dddddd'},
-              ]}>
+              disabled={backFlag}
+              style={[styles.logbtn, {marginRight: 15}, styles.backdisabled]}
+              onPress={() => {
+                setPage(page - 1);
+                let tempChosen = chosenItems;
+                tempChosen.pop();
+                setChosenItems(tempChosen);
+                setMainItem(0);
+              }}>
               <Text style={styles.textBtn}>Back</Text>
             </TouchableOpacity>
             <TouchableOpacity
@@ -192,20 +391,20 @@ const ChooseOne = ({navigation}) => {
               justifyContent: 'space-around',
               width: '80%',
             }}>
-            <View style={[styles.circle, {backgroundColor: '#000'}]}>
-              <Text style={{color: '#fff', fontSize: 20}}>1</Text>
+            <View style={[styles.circle, styles.firstPage]}>
+              <Text style={styles.firstPageText}>1</Text>
             </View>
-            <View style={styles.circle}>
-              <Text style={{fontSize: 20}}>2</Text>
+            <View style={[styles.circle, styles.secondPage]}>
+              <Text style={styles.secondPageText}>2</Text>
             </View>
-            <View style={styles.circle}>
-              <Text style={{fontSize: 20}}>3</Text>
+            <View style={[styles.circle, styles.thirdPage]}>
+              <Text style={styles.thirdPageText}>3</Text>
             </View>
-            <View style={styles.circle}>
-              <Text style={{fontSize: 20}}>4</Text>
+            <View style={[styles.circle, styles.fourthPage]}>
+              <Text style={styles.fourthPageText}>4</Text>
             </View>
-            <View style={styles.circle}>
-              <Text style={{fontSize: 20}}>5</Text>
+            <View style={[styles.circle, styles.fifthPage]}>
+              <Text style={styles.fifthPageText}>5</Text>
             </View>
           </View>
         </View>
@@ -280,6 +479,9 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  backdisabled: {
+    backgroundColor: '#c5c5c5',
   },
 });
 
