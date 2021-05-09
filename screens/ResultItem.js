@@ -6,6 +6,7 @@ const ResultItem = ({navigation, chosenItems}) => {
       {chosenItems.map(item => {
         return (
           <View
+            key={item.id}
             style={{
               flexDirection: 'row',
               justifyContent: 'flex-start',
