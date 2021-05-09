@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   StyleSheet,
   Text,
@@ -6,8 +6,16 @@ import {
   View,
   TouchableOpacity,
 } from 'react-native';
+import firestore from '@react-native-firebase/firestore';
 
-const Order = ({navigation}) => {
+const Order = ({route, navigation}) => {
+  const {typeName, price, count, items} = route.params;
+  const [customerName, setCustomerName] = useState();
+  const [customerPhone, setCustomerPhone] = useState();
+  const [day, setDay] = useState();
+  const [month, setMonth] = useState();
+  const [address, setAddress] = useState('Golosko 7/19');
+  const [disabled, setDisabled] = useState(true);
   const [toggleStyle, setToggleStyle] = useState({
     selfMethodStyle: {backgroundColor: '#000'},
     selfMethodTextStyle: {color: '#fff'},
@@ -16,7 +24,12 @@ const Order = ({navigation}) => {
     showSelf: true,
     showDelivery: false,
   });
-
+  useEffect(() => {
+    if (day && month && address && customerName && customerPhone) {
+      setDisabled(false);
+      styles.disableButton = {};
+    }
+  }, [day, month, address, customerPhone, customerName]);
   //   const [activeToggleText, setActiveToggleText] = useState({
   //     color: "#000",
   //   });
@@ -29,6 +42,7 @@ const Order = ({navigation}) => {
       showSelf: true,
       showDelivery: false,
     });
+    setAddress('Golosko 7/19');
   };
   const handleDeliveryMethod = () => {
     setToggleStyle({
@@ -65,8 +79,8 @@ const Order = ({navigation}) => {
         </View>
         <TextInput
           style={styles.input}
-          //   onChangeText={onChangeNumber}
-          //   value={number}
+          onChangeText={value => setCustomerName(value)}
+          value={customerName}
           placeholder="John Brown"
           keyboardType="default"
           textAlign="center"
@@ -82,8 +96,8 @@ const Order = ({navigation}) => {
         </View>
         <TextInput
           style={styles.input}
-          //   onChangeText={onChangeNumber}
-          //   value={number}
+          onChangeText={value => setCustomerPhone(value)}
+          value={customerPhone}
           placeholder="+38( ___)___-__-__ "
           keyboardType="numeric"
           textAlign="center"
@@ -131,7 +145,11 @@ const Order = ({navigation}) => {
       </View>
 
       <OurAddress active={toggleStyle.showSelf} />
-      <YourAddress active={toggleStyle.showDelivery} />
+      <YourAddress
+        active={toggleStyle.showDelivery}
+        setAddress={setAddress}
+        address={address}
+      />
       <View style={styles.container}>
         <View
           style={{
@@ -147,25 +165,17 @@ const Order = ({navigation}) => {
           }}>
           <TextInput
             style={[styles.inputDate, {width: '17%'}]}
-            //   onChangeText={onChangeNumber}
-            //   value={number}
+            onChangeText={value => setDay(value)}
+            value={day}
             placeholder="Day"
             keyboardType="numeric"
             textAlign="center"
           />
           <TextInput
             style={[styles.inputDate, {width: '17%'}]}
-            //   onChangeText={onChangeNumber}
-            //   value={number}
+            onChangeText={value => setMonth(value)}
+            value={month}
             placeholder="Month"
-            keyboardType="numeric"
-            textAlign="center"
-          />
-          <TextInput
-            style={[styles.inputDate, {width: '17%'}]}
-            //   onChangeText={onChangeNumber}
-            //   value={number}
-            placeholder="Year"
             keyboardType="numeric"
             textAlign="center"
           />
@@ -173,8 +183,30 @@ const Order = ({navigation}) => {
       </View>
       <View style={{alignItems: 'center', justifyContent: 'center'}}>
         <TouchableOpacity
+          disabled={disabled}
           style={styles.logbtn}
-          onPress={() => navigation.navigate('CompleteOrder')}>
+          onPress={() => {
+            if (toggleStyle.showDelivery) {
+              let deliveryAddress = address;
+            }
+            firestore()
+              .collection('Order')
+              .add({
+                customerName: customerName,
+                customerPhone: customerPhone,
+                delivery: toggleStyle.showDelivery,
+                address: address,
+                date: day + '/' + month,
+                price: price,
+                items: items,
+                productType: typeName,
+                count: count,
+              })
+              .then(() => {
+                console.log('Order Completed!');
+              });
+            navigation.navigate('CompleteOrder');
+          }}>
           <Text style={{color: '#fff', fontSize: 20}}>Make An Order</Text>
         </TouchableOpacity>
       </View>
@@ -204,7 +236,7 @@ const OurAddress = ({active}) => {
   );
 };
 
-const YourAddress = ({active}) => {
+const YourAddress = ({active, address, setAddress}) => {
   if (!active) return null;
   return (
     <View style={[styles.container]}>
@@ -217,8 +249,8 @@ const YourAddress = ({active}) => {
       </View>
       <TextInput
         style={styles.input}
-        //   onChangeText={onChangeNumber}
-        //   value={number}
+        onChangeText={value => setAddress(value)}
+        //           value={address}
         placeholder="Golosko 7/19"
         keyboardType="numeric"
         textAlign="center"
@@ -243,7 +275,7 @@ const styles = StyleSheet.create({
     borderRadius: 15,
     borderWidth: 1,
     height: 50,
-    marginLeft: '7%',
+    marginLeft: '11%',
     fontSize: 16,
   },
   label: {
@@ -263,7 +295,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   logbtn: {
-    backgroundColor: '#000',
+    backgroundColor: '#c5c5c5',
     width: 310,
     borderRadius: 100,
     justifyContent: 'center',
