@@ -180,7 +180,7 @@ const Tart = ({navigation}) => {
       {flag ? (
         <View style={styles.mainContainer}>
           {console.log(pageItems)}
-          <Text style={styles.mainLabel}>Choose cupcake {heads[page - 1]}</Text>
+          <Text style={styles.mainLabel}>Choose tart {heads[page - 1]}</Text>
           <View style={{height: '40%', width: '100%'}}>
             <GestureRecognizer
               onSwipeLeft={state => onSwipeLeft(state)}
